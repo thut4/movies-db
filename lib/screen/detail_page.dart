@@ -11,7 +11,9 @@ import '../data/network/api_service.dart';
 
 class DetailPage extends StatefulWidget {
   Movie movie;
-  DetailPage({Key? key, required this.movie}) : super(key: key);
+  String heroTag = "";
+  DetailPage({Key? key, required this.movie, required this.heroTag})
+      : super(key: key);
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -67,7 +69,7 @@ class _DetailPageState extends State<DetailPage> {
   _movieInformation() => Column(
         children: [
           Hero(
-            tag: "${widget.movie.id}",
+            tag: widget.heroTag,
             child: Image(
                 image: CachedNetworkImageProvider(
                     Api.imageUrl + widget.movie.posterPath)),
@@ -114,18 +116,20 @@ class _DetailPageState extends State<DetailPage> {
               const SizedBox(
                 width: 12,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    casts.originalName,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  Text(
-                    casts.character,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      casts.originalName,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      casts.character,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
               )
             ],
           ),

@@ -1,6 +1,7 @@
 import 'package:datshin/data/model/movie.dart';
 import 'package:datshin/screen/detail_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../data/network/api_service.dart';
 
@@ -39,10 +40,16 @@ class _MovieListState extends State<MovieList> {
                   Movie movie = widget.list[index];
                   return InkWell(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DetailPage(movie: movie)));
+                      Get.to(
+                          () => DetailPage(
+                                movie: movie,
+                                heroTag: "${movie.id}" + widget.title,
+                              ),
+                          transition: Transition.fadeIn);
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => DetailPage(movie: movie)));
                     },
                     child: SizedBox(
                       width: 125,
@@ -62,6 +69,7 @@ class _MovieListState extends State<MovieList> {
                               child: Text(
                                 movie.title,
                                 maxLines: 2,
+                                textAlign: TextAlign.center,
                               ),
                             ),
                           ],
