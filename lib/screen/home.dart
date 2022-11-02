@@ -1,12 +1,10 @@
 import 'package:datshin/controller/home_controller.dart';
-import 'package:datshin/data/model/movie.dart';
 import 'package:datshin/screen/movie_list.dart';
 import 'package:datshin/screen/search_page.dart';
+import 'package:datshin/screen/signin_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
-
-import '../data/network/api_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -53,6 +51,12 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: const Text('Datshin'),
           elevation: 0,
+          leading: IconButton(
+              onPressed: () {
+                FirebaseAuth.instance.signOut();
+                Get.off(() => SignIn());
+              },
+              icon: const Icon(Icons.logout_rounded)),
           actions: [
             IconButton(
                 onPressed: () {

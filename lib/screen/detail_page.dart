@@ -1,10 +1,13 @@
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datshin/component/blur.dart';
+import 'package:datshin/component/poster.dart';
 import 'package:datshin/data/model/cast.dart';
 import 'package:datshin/data/model/movie.dart';
 import 'package:datshin/screen/search_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../data/network/api_service.dart';
@@ -12,6 +15,7 @@ import '../data/network/api_service.dart';
 class DetailPage extends StatefulWidget {
   Movie movie;
   String heroTag = "";
+
   DetailPage({Key? key, required this.movie, required this.heroTag})
       : super(key: key);
 
@@ -22,6 +26,8 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   var api = Api();
   List<Cast>? cast;
+  bool isFav = false;
+  String docID = "";
   @override
   void initState() {
     api.getCast(widget.movie.id).then((value) {
@@ -29,7 +35,23 @@ class _DetailPageState extends State<DetailPage> {
         cast = value;
       });
     });
-    super.initState();
+    CollectionReference favs = FirebaseFirestore.instance.collection('favs');
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      favs
+          .where("uid", isEqualTo: user.uid)
+          .where("mid", isEqualTo: widget.movie.id)
+          .get()
+          .then((snapshot) {
+        if (snapshot.docs.isEmpty) {
+          isFav = false;
+        } else {
+          isFav = true;
+          docID = snapshot.docs.first.id;
+        }
+        setState(() {});
+      });
+    }
   }
 
   @override
@@ -41,14 +63,26 @@ class _DetailPageState extends State<DetailPage> {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SearchPage()));
+                setState(() {
+                  if (isFav) {
+                    _makeUnFav();
+                  } else {
+                    _makeFav();
+                  }
+                });
               },
-              icon: const Icon(Icons.search))
+              icon: isFav
+                  ? const Icon(
+                      Icons.favorite,
+                      color: Colors.red,
+                    )
+                  : const Icon(Icons.favorite_outline))
         ],
       ),
       body: Stack(children: [
-        BlurBackground(backdropPath: widget.movie.backdropPath),
+        widget.movie.backdropPath != null
+            ? BlurBackground(backdropPath: widget.movie.backdropPath!)
+            : Container(),
         SingleChildScrollView(
           child: Column(
             children: [
@@ -66,14 +100,39 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
+  _makeUnFav() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        isFav = false;
+      });
+      CollectionReference favs = FirebaseFirestore.instance.collection('favs');
+      favs.doc(docID).delete();
+    }
+  }
+
+  _makeFav() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      CollectionReference favs = FirebaseFirestore.instance.collection('favs');
+      favs.add({"uid": user.uid, "mid": widget.movie.id}).then((value) {
+        setState(() {
+          isFav = true;
+        });
+      }).catchError((error) {
+        setState(() {
+          isFav = false;
+        });
+        print("Failed to add user :$error");
+      });
+    }
+  }
+
   _movieInformation() => Column(
         children: [
           Hero(
-            tag: widget.heroTag,
-            child: Image(
-                image: CachedNetworkImageProvider(
-                    Api.imageUrl + widget.movie.posterPath)),
-          ),
+              tag: widget.heroTag,
+              child: Poster(posterPath: widget.movie.posterPath)),
           Padding(
             padding: const EdgeInsets.all(8),
             child: Text(

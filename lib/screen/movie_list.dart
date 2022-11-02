@@ -1,3 +1,4 @@
+import 'package:datshin/component/poster.dart';
 import 'package:datshin/data/model/movie.dart';
 import 'package:datshin/screen/detail_page.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,7 @@ class _MovieListState extends State<MovieList> {
                       Get.to(
                           () => DetailPage(
                                 movie: movie,
-                                heroTag: "${movie.id}" + widget.title,
+                                heroTag: "${movie.id}${widget.title}",
                               ),
                           transition: Transition.fadeIn);
                       // Navigator.push(
@@ -56,11 +57,15 @@ class _MovieListState extends State<MovieList> {
                       height: 230,
                       child: Card(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             SizedBox(
-                                height: 178,
-                                child: Image.network(
-                                    Api.imageUrl + movie.posterPath)),
+                                width: 124,
+                                child: Hero(
+                                    tag: "${movie.id}${widget.title}",
+                                    child: Poster(
+                                      posterPath: movie.posterPath,
+                                    ))),
                             const SizedBox(
                               height: 4,
                             ),
