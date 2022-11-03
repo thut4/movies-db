@@ -89,8 +89,9 @@ class _SignInState extends State<SignIn> {
 
   _login() async {
     bool isError = false;
-    loading = true;
     setState(() {});
+    loading = true;
+    
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
@@ -100,7 +101,7 @@ class _SignInState extends State<SignIn> {
       if (e.code == 'user-not-found') {
         _register();
       } else if (e.code == 'wrong-password') {
-        _snackbar("Wrond Password");
+        _snackbar("Wrong Password");
       } else {
         _snackbar(e.code);
       }
@@ -125,7 +126,7 @@ class _SignInState extends State<SignIn> {
     await signInWithGoogle();
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      Get.off(() =>const HomePage());
+      Get.off(() => const HomePage());
     }
   }
 }
