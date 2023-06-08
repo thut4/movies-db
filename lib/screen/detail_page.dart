@@ -60,6 +60,7 @@ class _DetailPageState extends State<DetailPage> {
       appBar: AppBar(
         title: Text(widget.movie.title),
         centerTitle: true,
+        elevation: 0,
         actions: [
           IconButton(
               onPressed: () {
@@ -74,7 +75,7 @@ class _DetailPageState extends State<DetailPage> {
               icon: isFav
                   ? const Icon(
                       Icons.favorite,
-                      color: Colors.red,
+                      // color: Colors.red,
                     )
                   : const Icon(Icons.favorite_outline))
         ],

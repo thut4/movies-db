@@ -35,11 +35,12 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^0.13.5
   cached_network_image: any
-  get: 
+  get:
   firebase_core: ^2.1.1
   firebase_auth: ^4.1.0
   cloud_firestore: ^4.0.3
   google_sign_in: ^5.4.2
+  rive: ^0.11.2
 
 dev_dependencies:
   flutter_test:
@@ -64,8 +65,11 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/img/cover.jpg
-    - assets/img/cast.png
+    - assets/images/
+    - assets/img/
+    # - assets/images/animated_login_character.riv
+    # - assets/img/cover.jpg
+    # - assets/img/cast.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

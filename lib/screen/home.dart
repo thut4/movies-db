@@ -51,12 +51,15 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: const Text('Datshin'),
           elevation: 0,
+          centerTitle: true,
           leading: IconButton(
-              onPressed: () {
-                FirebaseAuth.instance.signOut();
-                Get.off(() => SignIn());
-              },
-              icon: const Icon(Icons.logout_rounded)),
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+              Get.off(() => SignIn());
+            },
+            icon: const Icon(Icons.logout_rounded),
+            color: Colors.redAccent,
+          ),
           actions: [
             IconButton(
                 onPressed: () {

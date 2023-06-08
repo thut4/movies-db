@@ -1,6 +1,5 @@
 import 'package:datshin/data/model/popular.dart';
 import 'package:http/http.dart' as http;
-
 import '../model/cast.dart';
 import '../model/movie.dart';
 import '../model/resp_cast.dart';
